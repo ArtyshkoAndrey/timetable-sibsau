@@ -15,7 +15,7 @@
           <nb-right />
         </nb-header>
         <nb-content :scrollEnabled="false">
-            <nb-swipe-row 
+            <nb-swipe-row
                 :style="{ backgroundColor: '#9370DB' }"
                 :leftOpenValue="75"
                 :rightOpenValue="-75"

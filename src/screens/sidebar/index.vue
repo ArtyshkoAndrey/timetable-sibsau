@@ -7,10 +7,10 @@
         <nb-list-item v-for="data in datas" :key="data.route" button noBorder :onPress="() => handleListItemClick(data)">
           <nb-left>
             <nb-icon
-                    active
-                    :type="data.type"
-                    :name="data.icon"
-                    :style="{ color: '#777', fontSize: 26, width: 30 }"
+              active
+              :type="data.type"
+              :name="data.icon"
+              :style="{ color: '#777', fontSize: 26, width: 30 }"
             />
             <nb-text>
               {{data.name}}
@@ -52,8 +52,7 @@
           },
           drawerImageObj: {
             left: Platform.OS === "android" ? deviceWidth / 10 : deviceWidth / 9,
-            top:
-                    Platform.OS === "android" ? deviceHeight / 13 : deviceHeight / 12,
+            top: Platform.OS === "android" ? deviceHeight / 13 : deviceHeight / 12,
             resizeMode: "cover"
           },
           badgeText: {
@@ -64,12 +63,12 @@
         },
         datas: [
           {
-            name: "Timetable",
+            name: "Расписание",
             route: "Home",
             type: "FontAwesome",
             icon: "table",
             bg: "#C5F442"
-          },
+          }
         ]
       };
     },
@@ -91,13 +90,13 @@
     align-self: center;
     position: relative;
     margin-bottom: 10;
-    aspectRatio: 1.5;
+    aspectRatio: 3;
   }
   .drawer-image {
     align-self: center;
     position: absolute;
     height: 75;
-    width: 210;
+    width: 100%;
   }
   .list-item-badge-container {
     border-radius: 3;

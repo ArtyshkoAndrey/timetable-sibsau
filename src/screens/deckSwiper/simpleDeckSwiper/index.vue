@@ -20,6 +20,7 @@
                 :looping="isLoopingRequired"
                 :renderEmpty="handleCardEmpty"
                 :renderItem="handleCardRendering"
+                :renderBottom="bottomCardRendering"
             >
             </nb-deck-swiper>
         </view>
@@ -29,11 +30,6 @@
 <script>
 import React from "react";
 import { View, Text } from "react-native";
-import cardOne from "../../../../assets/swiper-1.png";
-import cardTwo from "../../../../assets/swiper-2.png";
-import cardThree from "../../../../assets/swiper-3.png";
-import cardFour from "../../../../assets/swiper-4.png";
-
 import CardComponent from "../common/card";
 
 export default {
@@ -41,27 +37,15 @@ export default {
     return {
       cardItemsArr: [
         {
-          text: "Card One",
-          name: "One",
-          image: cardOne
+					dayOfTheWeek: "Понедельник",
+          subjects: ['Физическая культура', 'Методы моделирования','Инструментарий принятия решений']
         },
-        {
-          text: "Card Two",
-          name: "Two",
-          image: cardTwo
-        },
-        {
-          text: "Card Three",
-          name: "Three",
-          image: cardThree
-        },
-        {
-          text: "Card Four",
-          name: "Four",
-          image: cardFour
-        }
+				{
+					dayOfTheWeek: "Вторник",
+					subjects: ['Человекомашинные интерфейсы', 'Инструментарий принятия решений']
+				}
       ],
-      isLoopingRequired: false
+      isLoopingRequired: true
     };
   },
   methods: {
@@ -74,7 +58,10 @@ export default {
     },
     handleCardRendering: function(item) {
       return <CardComponent item={item} />;
-    }
+    },
+		bottomCardRendering: function(item) {
+			return <CardComponent v-show="false" item={item} />;
+		}
   }
 };
 </script>
