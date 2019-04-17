@@ -1,28 +1,39 @@
 {
   "expo": {
     "name": "Timetable Sibsau",
-    "sdkVersion": "27.0.0",
-    "icon": "./assets/nblogo.png",
     "slug": "timetable-sibsau",
-    "loading": {
-      "hideExponentText": true,
-      "backgroundImage": "./assets/splashscreen.png"
-    },
+    "privacy": "public",
+    "sdkVersion": "32.0.0",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "version": "1.0.0",
     "orientation": "portrait",
     "primaryColor": "#cccccc",
-    "packagerOpts": {
-      "assetExts": ["ttf"]
-    },
+    "icon": "./assets/images/icon.png",
     "androidStatusBarColor": "#334393",
     "androidStatusBar": {
       "barStyle": "light-content",
       "backgroundColor": "#334393"
     },
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.fulliton.timetablesibsau"
+    },
     "android": {
       "package": "com.fulliton.timetablesibsau"
-    },
-    "ios": {
-      "bundleIdentifier": "com.fulliton.timetablesibsau"
     }
   }
 }
