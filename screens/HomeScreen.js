@@ -8,22 +8,62 @@ import { Header, Right, Left, Icon, Container, Body, Content, Button, Title } fr
 
 
 export default class HomeScreen extends React.Component {
+  static navigationOptions = {
+    header: null,
+  };
   constructor (props) {
     super(props);
     this.state = {
+      data: [],
       cardItemsArr: [
         {
           dayOfTheWeek: "Понедельник",
-          subjects: ['Физическая культура', 'Методы моделирования', 'Инструментарий принятия решений']
+          subjects: ['Физическая культура',
+            'ПРОЕКТИРОВАНИЕ ЧЕЛОВЕКО-МАШИННОГО ИНТЕРФЕЙСА',
+            'ИНСТРУМЕНТАРИЙ ПРИНЯТИЯ РЕШЕНИЙ',
+            'ПРОЕКТИРОВАНИЕ ЧЕЛОВЕКО-МАШИННОГО ИНТЕРФЕЙСА',
+            'ИНСТРУМЕНТАРИЙ ПРИНЯТИЯ РЕШЕНИЙ'
+          ]
         },
         {
           dayOfTheWeek: "Вторник",
-          subjects: ['Человекомашинные интерфейсы', 'Инструментарий принятия решений']
-        }
+          subjects: [
+            'ПРОЕКТИРОВАНИЕ ЧЕЛОВЕКО-МАШИННОГО ИНТЕРФЕЙСА',
+            'ИНСТРУМЕНТАРИЙ ПРИНЯТИЯ РЕШЕНИЙ'
+          ]
+        },
+        {
+          dayOfTheWeek: "Среда",
+          subjects: [
+            'РУССКИЙ ЯЗЫК И КУЛЬТУРА РЕЧИ',
+            'ФИЗИЧЕСКАЯ КУЛЬТУРА И СПОРТ'
+          ]
+        },
+        {
+          dayOfTheWeek: "Четверг",
+          subjects: [
+            'ВЫЧИСЛИТЕЛЬНАЯ МАТЕМАТИКА',
+            'ОБЪЕКТНО-ОРИЕНТИРОВАННОЕ ПРОГРАММИРОВАНИЕ',
+            'МЕТОДЫ МАТЕМАТИЧЕСКОГО МОДЕЛИРОВАНИЯ СЛОЖНЫХ ПРОЦЕССОВ И СИСТЕМ'
+          ]
+        },
+        {
+          dayOfTheWeek: "Пятница",
+          subjects: [
+            'ОБЪЕКТНО-ОРИЕНТИРОВАННОЕ ПРОГРАММИРОВАНИЕ',
+            'МЕТОДЫ МАТЕМАТИЧЕСКОГО МОДЕЛИРОВАНИЯ СЛОЖНЫХ ПРОЦЕССОВ И СИСТЕМ',
+            'ОБЪЕКТНО-ОРИЕНТИРОВАННОЕ ПРОГРАММИРОВАНИЕ',
+            'МЕТОДЫ МАТЕМАТИЧЕСКОГО МОДЕЛИРОВАНИЯ СЛОЖНЫХ ПРОЦЕССОВ И СИСТЕМ',
+            'ФУНКЦИОНАЛЬНОЕ ПРОГРАММИРОВАНИЕ',
+            'ФУНКЦИОНАЛЬНОЕ ПРОГРАММИРОВАНИЕ'
+          ]
+        },
       ]
     };
   }
-
+  componentWillMount () {
+    console.log('hi')
+  }
   render() {
     return (
       <Container style={{flex: 1}}>
@@ -39,7 +79,7 @@ export default class HomeScreen extends React.Component {
           <Right />
         </Header>
         <Content>
-          <View style={{paddingVertical: 30}}>
+          <View>
             <Carousel
               ref={(c) => { this._carousel = c; }}
               data={this.state.cardItemsArr}
