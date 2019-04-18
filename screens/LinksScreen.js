@@ -5,6 +5,8 @@ import { ExpoLinksView } from '@expo/samples';
 export default class LinksScreen extends React.Component {
   static navigationOptions = {
     title: 'Links',
+    headerMode: 'none',
+    header: null,
   };
 
   render() {
