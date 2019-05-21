@@ -1,4 +1,5 @@
 {
+  "name": "Timetable-sibsau",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
@@ -16,6 +17,7 @@
     "native-base": "^2.12.1",
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "react-native-elements": "^1.1.0",
     "react-native-snap-carousel": "^3.7.5",
     "react-navigation": "^3.0.9"
   },

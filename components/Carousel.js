@@ -1,27 +1,13 @@
-import React from 'react';
-import { View, AsyncStorage } from 'react-native';
-import colors from './../constants/Colors'
-import CarouselTabel from './../components/Carousel'
-import { Header,
-  Right,
-  Left,
-  Icon,
-  Container,
-  Body,
-  Content,
-  Button,
-  Title,
-  Tab,
-  Tabs,
-  Text } from 'native-base';
-
+import React, { Component } from 'react'
+import { StyleSheet, View } from 'react-native'
+import Carousel, { Pagination } from 'react-native-snap-carousel';
+import ListDay from './DayOfTheWeekList'
+import styles from './../constants/SliderEntry.style';
+import { sliderWidth, itemWidth } from './../constants/SliderEntry.style';
 
 let day = false
 
-export default class HomeScreen extends React.Component {
-  static navigationOptions = {
-    header: null,
-  };
+export default class CarouselTabel extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -90,31 +76,60 @@ export default class HomeScreen extends React.Component {
       ]
     };
   }
-  componentDidMount = async () =>  {
-    await AsyncStorage.getItem('userGroup').then((value) => this.setState({ userGroup: value }))
-    setTimeout(() => this.setState({ numWeek: 0, scrollWithoutAnimation: false }), 1);
+  componentWillMount () {
+    let date = new Date()
+    let b = false
+    this.state.slider1ActiveSlide = Number(date.getDay())
+    this.state.cardItemsArr.forEach((item) => {
+      if (item.num === Number(date.getDay())) {
+        this.state.slider1ActiveSlide = item.num - 1
+        this.state.firstSlide = item.num - 1
+        day = item.num
+        b = true
+
+      }
+    })
+    if (b === false ) {
+      // this.state.slider1ActiveSlide = this.state.cardItemsArr[this.state.cardItemsArr.length - 1].num - 1
+      this.state.slider1ActiveSlide = 0
+      this.state.firstSlide = 0
+      day = false
+    }
   }
-  render() {
+  render () {
     return (
-      <Container style={{flex: 1}}>
-        <Header hasTabs style={{ backgroundColor: '#006CB5' }}>
-          <Body>
-            <Title style={{paddingLeft: 20}}>{'Расписание ' + this.state.userGroup}</Title>
-          </Body>
-        </Header>
-        <Tabs style={{ backgroundColor: '#006CB5' }} locked={true} page={this.state.numWeek} scrollWithoutAnimation={this.state.scrollWithoutAnimation}>
-          <Tab  heading="1 неделя">
-            <Content>
-              <CarouselTabel />
-            </Content>
-          </Tab>
-          <Tab heading="2 неделя">
-            <Content>
-              <CarouselTabel />
-            </Content>
-          </Tab>
-        </Tabs>
-      </Container>
+      <View>
+        <Carousel
+          ref={ c => this._carousel = c }
+          data={this.state.cardItemsArr}
+          renderItem={this._renderItem}
+          sliderWidth={sliderWidth}
+          itemWidth={itemWidth}
+          contentContainerCustomStyle={styles.sliderContentContainer}
+          containerCustomStyle={styles.slider}
+          inactiveSlideScale={0.7}
+          inactiveSlideOpacity={0.7}
+          firstItem={this.state.firstSlide}
+          onSnapToItem={(index) => this.setState({ slider1ActiveSlide: index }) }
+        />
+         <Pagination
+            dotsLength={this.state.cardItemsArr.length}
+            activeDotIndex={this.state.slider1ActiveSlide}
+            containerStyle={styles.paginationContainer}
+            dotColor={'rgba(0, 0, 0, 0.92)'}
+            dotStyle={styles.paginationDot}
+            inactiveDotOpacity={0.4}
+            inactiveDotColor={'rgba(0, 0, 0, 0.4)'}
+            inactiveDotScale={0.6}
+            carouselRef={this._carouse}
+            tappableDots={!!this._carouse}
+          />
+      </View>
+    )
+  }
+  _renderItem ({item, index}) {
+    return (
+      <ListDay key={index} day={day} item={item} />
     );
   }
 }

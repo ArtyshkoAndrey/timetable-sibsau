@@ -1,6 +1,8 @@
-import React, { Component } from 'react';
-import { Content, ListItem, Text, Separator, Card, CardItem } from 'native-base';
-
+import React, { Component } from 'react'
+import { StyleSheet } from 'react-native'
+import { Content, ListItem, Text, Separator, Card, CardItem } from 'native-base'
+import { hp } from './../constants/SliderEntry.style'
+import { Col, Row, Grid } from 'react-native-easy-grid'
 
 export default class ListDay extends Component {
 	constructor (props) {
@@ -16,13 +18,21 @@ export default class ListDay extends Component {
 		}
 	return payments
 	}
+	_checkDay () {
+		if (this.props.day === this.props.item.num) {
+			return(<Text style={{ padding: 5, fontSize:14, width: 100, textAlign: 'center', borderRadius: 20, backgroundColor:'#ff0000', color: '#fff' }}>Сегодня</Text>)
+		}
+	}
 	render() {
 		return (
-			<Card>
+			<Card style={styles.card}>
 				<CardItem>
-					<Content padder>
-						<Separator bordered>
-							<Text style={{fontWeight: 'bold', fontSize: 14,}}>{ this.props.item.dayOfTheWeek }</Text>
+					<Content>
+						<Separator bordered style={{backgroundColor: '#006CB5', paddingTop: 20, paddingBottom: 20}}>
+							<Grid style={{marginTop: -10}}>
+								<Col style={{width: null}}><Text style={{fontWeight: 'bold', fontSize: 14, padding: 0, color: '#fff'}}>{ this.props.item.dayOfTheWeek }</Text></Col>
+								<Col style={{marginTop: -5, width: null}}>{this._checkDay()}</Col>
+							</Grid>
 						</Separator>
 						{this._subjects()}
 					</Content>
@@ -31,3 +41,9 @@ export default class ListDay extends Component {
 		);
 	}
 }
+
+const styles = StyleSheet.create({
+  card: {
+    maxHeight: hp(60)
+  }
+});
