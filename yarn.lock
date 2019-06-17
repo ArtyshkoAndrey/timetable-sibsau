@@ -6172,6 +6172,11 @@ react-navigation-tabs@1.1.2:
     react-lifecycles-compat "^3.0.4"
     react-native-tab-view "^1.3.4"
 
+react-navigation-transitions@^1.0.10:
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/react-navigation-transitions/-/react-navigation-transitions-1.0.10.tgz#9540aaaa6e115e7308761106ab4d7727daa1fcf5"
+  integrity sha512-CmGo3BEHbs6YtPQt65CHDKqd/WNuWk+g6Oif6sX0WrYLic9Lb7alt4GVl7syoqJGTKKjdRFKkYDuwFRuTkjs5Q==
+
 react-navigation@^3.0.9:
   version "3.8.1"
   resolved "https://registry.yarnpkg.com/react-navigation/-/react-navigation-3.8.1.tgz#9df7ba8a7d3f4d2487dab576b79cf9cfc7f93d5a"

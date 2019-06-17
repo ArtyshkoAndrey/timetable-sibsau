@@ -1,19 +1,14 @@
 import React from 'react';
 import { View, AsyncStorage, ActivityIndicator, StyleSheet, StatusBar } from 'react-native';
-import colors from './../constants/Colors'
-import CarouselTabel from './../components/Carousel'
+import CarouselTable from './../components/Carousel';
+import ExamCarouselTable from './../components/ExamCarousel';
 import { Header,
-  Right,
-  Left,
-  Icon,
   Container,
   Body,
   Content,
-  Button,
   Title,
   Tab,
-  Tabs,
-  Text } from 'native-base';
+  Tabs } from 'native-base';
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -31,36 +26,61 @@ export default class HomeScreen extends React.Component {
       cardItemsArr: []
     };
   }
-  componentDidMount () {
-    AsyncStorage.getItem('userGroup')
-      .then((value) => {
-        this.setState({ userGroup: value })
-        fetch('http://192.168.0.61/group/' + value)
-          .then((response) => { return response.json()})
-          .then((data) => {
-            let year = new Date().getFullYear()
-            let month = new Date().getMonth()
-            let today = new Date(year, month, 0).getTime()
-            let now = new Date().getTime()
-            let week = Math.round((now - today) / (1000 * 60 * 60 * 24 * 7))
-            if (week % 2) {
-              this.setState({ numWeek: 0 })
-            } else {
-              this.setState({ numWeek: 1 })
-            }
-            console.log('Сейчас', this.state.numWeek, 'неделя')
-            this.setState({
-              isLoading: false,
-              cardItemsArr: data.timetable,
-              day: new Date().getDay()
+  componentDidMount = async () => {
+    const data = await AsyncStorage.getItem('timetable')
+    console.log('data', data)
+    if (data !== null) {
+      this.calcData(JSON.parse(data))
+      AsyncStorage.getItem('userGroup')
+        .then((value) => {
+          this.setState({ userGroup: value })
+        })
+    } else {
+      AsyncStorage.getItem('userGroup')
+        .then((value) => {
+          this.setState({ userGroup: value })
+          fetch('http://95.188.80.41/group/' + value)
+            .then((response) => {
+              try {
+                return response.json()
+              } catch(e) {
+                console.log('123123')
+                alert("Нет такой группы")
+                // this.props.navigation.navigate('LogoutStack')
+              }
             })
-            setTimeout(() => this.setState({ page: this.state.numWeek, scrollWithoutAnimation: false }), 0)
-          })
-          .catch((error) =>{
-            console.error(error)
-          })
-      })
+            .then((table) => {
+              AsyncStorage.setItem('timetable', JSON.stringify(table))
+              this.calcData(table)
+            })
+            .catch((error) =>{
+              console.error(error)
+              alert("Нет такой группы")
+            })
+        })
+    }
   }
+
+  calcData (data) {
+    let year = new Date().getFullYear()
+    let month = new Date().getMonth()
+    let today = new Date(year, month, 0).getTime()
+    let now = new Date().getTime()
+    let week = Math.round((now - today) / (1000 * 60 * 60 * 24 * 7))
+    if (week % 2) {
+      this.setState({ numWeek: 0 })
+    } else {
+      this.setState({ numWeek: 1 })
+    }
+    console.log('Сейчас', this.state.numWeek, 'неделя')
+    this.setState({
+      isLoading: false,
+      cardItemsArr: data,
+      day: new Date().getDay()
+    })
+    setTimeout(() => this.setState({ page: this.state.numWeek, scrollWithoutAnimation: false }), 0)
+  }
+
   render() {
     if(this.state.isLoading){
       return (
@@ -80,12 +100,17 @@ export default class HomeScreen extends React.Component {
         <Tabs style={{ backgroundColor: '#006CB5' }} locked={true} page={this.state.page} initialPage={this.state.page} scrollWithoutAnimation={this.state.scrollWithoutAnimation}>
           <Tab  heading="1 неделя">
             <Content>
-              <CarouselTabel timetable={this.state.cardItemsArr[0]} day={this.state.day} week={0} numWeek={this.state.numWeek} />
+              <CarouselTable timetable={this.state.cardItemsArr.timetable[0]} day={this.state.day} week={0} numWeek={this.state.numWeek} />
             </Content>
           </Tab>
           <Tab heading="2 неделя">
             <Content>
-              <CarouselTabel timetable={this.state.cardItemsArr[1]} day={this.state.day} week={1} numWeek={this.state.numWeek} />
+              <CarouselTable timetable={this.state.cardItemsArr.timetable[1]} day={this.state.day} week={1} numWeek={this.state.numWeek} />
+            </Content>
+          </Tab>
+          <Tab heading="Сессия">
+            <Content>
+              <ExamCarouselTable exams={this.state.cardItemsArr.exams} />
             </Content>
           </Tab>
         </Tabs>

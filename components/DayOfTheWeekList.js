@@ -17,7 +17,7 @@ export default class ListDay extends Component {
               <Text note>{this.props.item.lessons[i]['time'][0]}</Text>
             </Left>
             <Body>
-              <Text>{this.props.item.lessons[i].name }</Text>
+              <Text>{this.capitalize(this.props.item.lessons[i].name) }</Text>
             </Body>
           </ListItem>
         )
@@ -27,8 +27,8 @@ export default class ListDay extends Component {
               <Text note>{this.props.item.lessons[i]['time'][0]}</Text>
             </Left>
             <Body>
-              <Text>{'1. ' + this.props.item.lessons[i]['0'].name }</Text>
-              <Text>{'2. ' + this.props.item.lessons[i]['1'].name }</Text>
+              <Text>{'1. ' + this.capitalize(this.props.item.lessons[i]['0'].name) }</Text>
+              <Text>{'2. ' + this.capitalize(this.props.item.lessons[i]['1'].name) }</Text>
             </Body>
           </ListItem>
         )
@@ -36,8 +36,12 @@ export default class ListDay extends Component {
     }
   return payments
   }
+  capitalize(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+  }
   _checkDay () {
-    if (this.props.week === this.props.numWeek) {
+    if (this.props.week === this.props.numWeek && this.props.day === this.props.item.index) {
+      console.log(this.props.week, this.props.numWeek)
       return(<Text style={{ padding: 5, fontSize:14, width: 100, textAlign: 'center', borderRadius: 20, backgroundColor:'#ff0000', color: '#fff' }}>Сегодня</Text>)
     }
     // if (this.props.day === this.props.item.num) {

@@ -8,7 +8,7 @@
       "ios",
       "android"
     ],
-    "version": "1.0.0",
+    "version": "1.2.3",
     "orientation": "portrait",
     "primaryColor": "#cccccc",
     "icon": "./assets/images/icon.png",
@@ -18,12 +18,13 @@
       "backgroundColor": "#006CB5"
     },
     "splash": {
-      "image": "./assets/images/splash.png",
-      "resizeMode": "cover",
-      "backgroundColor": "#ffffff"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
+      "backgroundColor": "#ffffff",
+      "mdpi": "./assets /images/splash-port-mdpi.png",
+      "hdpi": "./assets/images/splash-port-hdpi.png",
+      "xhdpi": "./assets/images/splash-port-xhdpi.png",
+      "xxhdpi": "./assets/images/splash-port-xxhdpi.png",
+      "xxxhdpi": "./assets/images/splash-port-xxxhdpi.png",
+      "resizeMode": "contain"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -33,7 +34,21 @@
       "bundleIdentifier": "com.fulliton.timetablesibsau"
     },
     "android": {
-      "package": "com.fulliton.timetablesibsau"
+      "package": "com.fulliton.timetablesibsau",
+      "splash": {
+	      "backgroundColor": "#ffffff",
+	      "mdpi": "./assets/images/splash-port-mdpi.png",
+	      "hdpi": "./assets/images/splash-port-hdpi.png",
+	      "xhdpi": "./assets/images/splash-port-xhdpi.png",
+	      "xxhdpi": "./assets/images/splash-port-xxhdpi.png",
+	      "xxxhdpi": "./assets/images/splash-port-xxxhdpi.png",
+	      "resizeMode": "contain"
+	    },
+    },
+    "updates": {
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
     }
   }
 }

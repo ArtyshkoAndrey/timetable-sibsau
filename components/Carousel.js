@@ -1,29 +1,18 @@
 import React, { Component } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import ListDay from './DayOfTheWeekList'
 import styles from './../constants/SliderEntry.style';
 import { sliderWidth, itemWidth } from './../constants/SliderEntry.style';
-
-let day = null
-let week = null
-let numWeek = null
-
-export default class CarouselTabel extends Component {
+export default class CarouselTable extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      slider1ActiveSlide: this.props.day - 1,
+      slider1ActiveSlide:  this.props.day !== 0 ? this.props.day - 1 : 0,
       day: this.props.day,
       numWeek: this.props.numWeek,
       week: this.props.week
     }
-  }
-  componentDidMount () {
-    day = this.state.day
-    week = this.state.week
-    numWeek = this.state.numWeek
-    console.log('Test1', this.state.day)
     console.log(this.state.slider1ActiveSlide)
   }
   render () {
@@ -32,7 +21,7 @@ export default class CarouselTabel extends Component {
         <Carousel
           ref={ c => this._carousel = c }
           data={this.props.timetable}
-          renderItem={this._renderItem}
+          renderItem={this._renderItem.bind(this)}
           sliderWidth={sliderWidth}
           itemWidth={itemWidth}
           contentContainerCustomStyle={styles.sliderContentContainer}
@@ -58,9 +47,8 @@ export default class CarouselTabel extends Component {
     )
   }
   _renderItem ({item, index}) {
-    console.log('Тест недели в рендер Итем', week)
     return (
-      <ListDay key={index} day={day} item={item} week={week} numWeek={numWeek} />
+      <ListDay key={index} day={this.state.day} item={item} week={this.state.week} numWeek={this.state.numWeek} />
     );
   }
 }

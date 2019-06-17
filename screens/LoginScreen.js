@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Image, AsyncStorage } from "react-native";
+import { StyleSheet, View, Image, AsyncStorage, KeyboardAvoidingView } from "react-native";
 import { Container, Header, Content, Form, Item, Input, Body, Right, Title, Text, Button, Label } from 'native-base';
 import logo from "./../assets/images/logo.png"
 export default class LoginScreen extends React.Component {
@@ -27,14 +27,16 @@ export default class LoginScreen extends React.Component {
           <Right />
         </Header>
         <Content contentContainerStyle={styles.container} padder disableKBDismissScroll={true}>
-          <Image source={logo} style={{height: 100, width: null, resizeMode: 'contain'}} />
-          <Form>
-            <Item floatingLabel last>
-              <Label>Группа</Label>
-              <Input onChangeText={val => this.setState({userGroup: val})} />
-            </Item>
-            <Button onPress={this._signInAsync.bind(this)} rounded block primary style={{marginHorizontal: 40, marginTop: 50}}><Text> Вход </Text></Button>
-          </Form>
+          <KeyboardAvoidingView behavior="padding">
+            <Image source={logo} style={{height: 100, width: null, resizeMode: 'contain'}} />
+            <Form>
+              <Item floatingLabel last>
+                <Label>Группа</Label>
+                <Input onChangeText={val => this.setState({userGroup: val})} />
+              </Item>
+              <Button onPress={this._signInAsync.bind(this)} rounded block primary style={{marginHorizontal: 40, marginTop: 50}}><Text> Вход </Text></Button>
+            </Form>
+          </KeyboardAvoidingView>
         </Content>
       </Container>
     );
