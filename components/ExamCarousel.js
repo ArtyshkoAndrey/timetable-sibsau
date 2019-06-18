@@ -11,7 +11,7 @@ export default class ExamCarouselTable extends Component {
   render () {
     return (
         <Content>
-          <View style={{paddingLeft: 10, paddingRight: 10}}>
+          <View style={{paddingLeft: 10, paddingRight: 10, paddingTop: 25}}>
               {this._renderItem(this.props.exams)}
           </View>
         </Content>

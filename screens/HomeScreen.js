@@ -97,18 +97,18 @@ export default class HomeScreen extends React.Component {
             <Title style={{paddingLeft: 20}}>{'Расписание ' + this.state.userGroup.toUpperCase() }</Title>
           </Body>
         </Header>
-        <Tabs style={{ backgroundColor: '#006CB5' }} locked={true} page={this.state.page} initialPage={this.state.page} scrollWithoutAnimation={this.state.scrollWithoutAnimation}>
-          <Tab  heading="1 неделя">
+        <Tabs locked={true} page={this.state.page} initialPage={this.state.page} scrollWithoutAnimation={this.state.scrollWithoutAnimation}>
+          <Tab tabStyle={{ backgroundColor: '#006CB5'}} activeTabStyle={{ backgroundColor: '#006CB5' }} heading="1 неделя">
             <Content>
               <CarouselTable timetable={this.state.cardItemsArr.timetable[0]} day={this.state.day} week={0} numWeek={this.state.numWeek} />
             </Content>
           </Tab>
-          <Tab heading="2 неделя">
+          <Tab tabStyle={{ backgroundColor: '#006CB5' }} activeTabStyle={{ backgroundColor: '#006CB5' }} heading="2 неделя">
             <Content>
               <CarouselTable timetable={this.state.cardItemsArr.timetable[1]} day={this.state.day} week={1} numWeek={this.state.numWeek} />
             </Content>
           </Tab>
-          <Tab heading="Сессия">
+          <Tab tabStyle={{ backgroundColor: '#006CB5' }} activeTabStyle={{ backgroundColor: '#006CB5' }} heading="Сессия">
             <Content>
               <ExamCarouselTable exams={this.state.cardItemsArr.exams} />
             </Content>

@@ -20,21 +20,15 @@ export default class LoginScreen extends React.Component {
   render() {
     return (
       <Container>
-        <Header style={{ backgroundColor: '#006CB5' }}>
-          <Body>
-            <Title style={{paddingLeft: 20}}>Авторизация</Title>
-          </Body>
-          <Right />
-        </Header>
         <Content contentContainerStyle={styles.container} padder disableKBDismissScroll={true}>
           <KeyboardAvoidingView behavior="padding">
-            <Image source={logo} style={{height: 100, width: null, resizeMode: 'contain'}} />
+            <Image source={logo} style={{height: 100, marginBottom: 100, width: null, resizeMode: 'contain'}} />
             <Form>
-              <Item floatingLabel last>
+              <Item stackedLabel last>
                 <Label>Группа</Label>
-                <Input onChangeText={val => this.setState({userGroup: val})} />
+                <Input autoFocus={true} onChangeText={val => this.setState({userGroup: val})} />
               </Item>
-              <Button onPress={this._signInAsync.bind(this)} rounded block primary style={{marginHorizontal: 40, marginTop: 50}}><Text> Вход </Text></Button>
+              <Button onPress={this._signInAsync.bind(this)} rounded block primary style={{marginHorizontal: 40, marginTop: 50, backgroundColor: '#006CB5'}}><Text> Вход </Text></Button>
             </Form>
           </KeyboardAvoidingView>
         </Content>

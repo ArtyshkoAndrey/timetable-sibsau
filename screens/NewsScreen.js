@@ -51,15 +51,15 @@ export default class NewsScreen extends React.Component {
   }
   _renderItem () {
     let pay = []
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 1; i++) {
       pay.push(
         <Card key={i}>
           <CardItem bordered>
             <Left>
               <Thumbnail source={logo} />
               <Body>
-                <Text>NativeBase</Text>
-                <Text note>April 15, 2016</Text>
+                <Text>СибГУ</Text>
+                <Text note>17 июня 2019</Text>
               </Body>
             </Left>
           </CardItem>
@@ -77,21 +77,9 @@ export default class NewsScreen extends React.Component {
                 source={cardImage}
               />
               <Text>
-                NativeBase is a free and source framework that enable
-                developers to build high-quality mobile apps using React
-                Native iOS and Android apps with a fusion of ES6. NativeBase
-                builds a layer on top of React Native that provides you with
-                basic set of components for mobile application development.
+                Добро пожаловать в новое приложение "Расписание СибГУ". Здесь Вы найдёте своё актуальное расписание занятий и экзаменов
               </Text>
             </Body>
-          </CardItem>
-          <CardItem style={{ paddingVertical: 0 }}>
-            <Left>
-              <Button transparent>
-                <Icon name="logo-github" />
-                <Text>4,923 stars</Text>
-              </Button>
-            </Left>
           </CardItem>
         </Card>
       )
