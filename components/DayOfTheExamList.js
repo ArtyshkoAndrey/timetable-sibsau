@@ -11,14 +11,28 @@ export default class ListDayExam extends Component {
   capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
   }
+  _checkDay () {
+    let date = this.props.item.date
+    let thisDate = new Date().getDate() + '.' + ( (new Date().getMonth() + 1) > 9 ? new Date().getMonth() + 1 : '0' + (new Date().getMonth() + 1) ) + '.' + new Date().getFullYear()
+    if (date === thisDate) {
+      return(
+        <Text style={{fontSize:14, width: 90, paddingVertical: 3, marginTop: 3, textAlign: 'center', borderRadius: 100, backgroundColor:'#ff0000', color: '#fff' }}>
+          Сегодня
+        </Text>
+      )
+    }
+  }
   render() {
     return (
       <Card style={styles.card}>
         <CardItem>
           <Content>
-            <Separator bordered style={{backgroundColor: '#006CB5', paddingTop: 20, paddingBottom: 20}}>
-              <Grid style={{marginTop: -10}}>
-                <Col style={{width: null}}><Text style={{fontWeight: 'bold', fontSize: 14, padding: 0, color: '#fff'}}>{ this.props.item.date }</Text></Col>
+            <Separator bordered style={{backgroundColor: '#006CB5', paddingTop: 0}}>
+              <Grid>
+                <Col size={40}><Text style={{fontWeight: 'bold', marginTop: 5, fontSize: 14, color: '#fff'}}>{ this.props.item.date }</Text></Col>
+                <Col style={{width: 110}}>
+                  {this._checkDay()}
+                </Col>
               </Grid>
             </Separator>
             <List>

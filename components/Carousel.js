@@ -8,16 +8,23 @@ export default class CarouselTable extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      slider1ActiveSlide:  this.props.day !== 0 ? this.props.day - 1 : 0,
+      slider1ActiveSlide: 0,
       day: this.props.day,
       numWeek: this.props.numWeek,
       week: this.props.week
     }
-    console.log(this.state.slider1ActiveSlide)
+    if (this.props.week === this.props.numWeek) {
+      let date = new Date()
+      this.props.timetable.forEach((item, index) => {
+        if (item.index === date.getDay()) {
+          this.state.slider1ActiveSlide = index
+        }
+      })
+    }
   }
   render () {
     return (
-      <View>
+      <View style={{flex: 1}}>
         <Carousel
           ref={ c => this._carousel = c }
           data={this.props.timetable}
@@ -25,7 +32,7 @@ export default class CarouselTable extends Component {
           sliderWidth={sliderWidth}
           itemWidth={itemWidth}
           contentContainerCustomStyle={styles.sliderContentContainer}
-          containerCustomStyle={styles.slider}
+          containerCustomStyle={{flex: 1}}
           inactiveSlideScale={0.7}
           inactiveSlideOpacity={0.7}
           firstItem={this.state.slider1ActiveSlide}
@@ -35,10 +42,10 @@ export default class CarouselTable extends Component {
             dotsLength={this.props.timetable.length}
             activeDotIndex={this.state.slider1ActiveSlide}
             containerStyle={styles.paginationContainer}
-            dotColor={'rgba(0, 0, 0, 0.92)'}
+            dotColor={'#006CB5'}
             dotStyle={styles.paginationDot}
             inactiveDotOpacity={0.4}
-            inactiveDotColor={'rgba(0, 0, 0, 0.4)'}
+            inactiveDotColor={'#62ABDA'}
             inactiveDotScale={0.6}
             carouselRef={this._carouse}
             tappableDots={!!this._carouse}

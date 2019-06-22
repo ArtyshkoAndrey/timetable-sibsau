@@ -13,9 +13,9 @@ export default class LoginScreen extends React.Component {
     }
   }
   _signInAsync = async () => {
-    await AsyncStorage.setItem('userGroup', this.state.userGroup);
-    console.log(this.state.userGroup)
-    this.props.navigation.navigate('Main');
+    await AsyncStorage.setItem('userGroup', this.state.userGroup, () => {
+      this.props.navigation.navigate('Main')
+    });
   };
   render() {
     return (
@@ -26,7 +26,7 @@ export default class LoginScreen extends React.Component {
             <Form>
               <Item stackedLabel last>
                 <Label>Группа</Label>
-                <Input autoFocus={true} onChangeText={val => this.setState({userGroup: val})} />
+                <Input onChangeText={val => this.setState({userGroup: val})} />
               </Item>
               <Button onPress={this._signInAsync.bind(this)} rounded block primary style={{marginHorizontal: 40, marginTop: 50, backgroundColor: '#006CB5'}}><Text> Вход </Text></Button>
             </Form>

@@ -15,10 +15,12 @@ export default class LogoutScreen extends React.Component {
     super(props)
     this._signOutAsync()
   };
-  _signOutAsync = async () => {
-    await AsyncStorage.removeItem('userGroup')
-    await AsyncStorage.removeItem('timetable')
-    this.props.navigation.navigate('AuthLoading')
+  _signOutAsync () {
+    AsyncStorage.removeItem('userGroup', () => {
+      AsyncStorage.removeItem('timetable', () => {
+        this.props.navigation.navigate('Auth')
+      })
+    })
   };
   render() {
     return (

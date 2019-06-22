@@ -16,19 +16,19 @@ export default class AuthLoadingScreen extends React.Component {
 
   // Fetch the token from storage then navigate to our appropriate place
   _bootstrapAsync = async () => {
-    await AsyncStorage.removeItem('timetable')
-    try {
-      const update = await Expo.Updates.checkForUpdateAsync();
-      if (update.isAvailable) {
-        await Expo.Updates.fetchUpdateAsync()
-        alert("Новая версия")
-        await Expo.Updates.reloadFromCache()
+    if (!__DEV__) {
+      try {
+        const update = await Expo.Updates.checkForUpdateAsync();
+        if (update.isAvailable) {
+          await Expo.Updates.fetchUpdateAsync()
+          alert("Новая версия")
+          await Expo.Updates.reloadFromCache()
+        }
+      } catch (e) {
+        alert(e)
       }
-    } catch (e) {
-      alert(e)
     }
     const userToken = await AsyncStorage.getItem('userGroup');
-    console.log(userToken)
 
     // This will switch to the App screen or Auth screen and this loading
     // screen will be unmounted and thrown away.
