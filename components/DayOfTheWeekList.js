@@ -57,33 +57,29 @@ export default class ListDay extends Component {
       )
     }
   }
+  handleScroll (event) {
+    this.props.getYCarousel(event.nativeEvent.contentOffset.y)
+    // console.log(event.nativeEvent.contentOffset.y)
+  }
   render() {
     return (
-      <View style={{ flex: 1 }}>
-        <Card>
-          <CardItem style={{paddingLeft: 0, paddingRight: 0, paddingTop: 0}}>
-            <Content>
-              <Separator bordered style={{backgroundColor: '#006CB5', paddingTop: 0}}>
-                <Grid>
-                  <Col size={40}><Text style={{fontWeight: 'bold', marginLeft: 5 ,marginTop: 5, fontSize: 14, color: '#fff'}}>{ this.props.item.nameDay }</Text></Col>
-                  <Col style={{width: 110}}>
-                    {this._checkDay()}
-                  </Col>
-                </Grid>
-              </Separator>
-              <List>
-                {this._subjects()}
-              </List>
-            </Content>
-          </CardItem>
-        </Card>
-      </View>
+      <Card>
+        <CardItem style={{paddingLeft: 0, paddingRight: 0, paddingTop: 0}}>
+          <Content onScroll={this.handleScroll.bind(this)}>
+            <Separator bordered style={{backgroundColor: '#006CB5', paddingTop: 0}}>
+              <Grid>
+                <Col size={40}><Text style={{fontWeight: 'bold', marginLeft: 5 ,marginTop: 5, fontSize: 14, color: '#fff'}}>{ this.props.item.nameDay }</Text></Col>
+                <Col style={{width: 110}}>
+                  {this._checkDay()}
+                </Col>
+              </Grid>
+            </Separator>
+            <List>
+              {this._subjects()}
+            </List>
+          </Content>
+        </CardItem>
+      </Card>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  card: {
-    maxHeight: hp(1)
-  }
-});

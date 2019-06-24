@@ -24,8 +24,8 @@ export default class ListDayExam extends Component {
   }
   render() {
     return (
-      <Card style={styles.card}>
-        <CardItem>
+      <Card>
+        <CardItem style={{paddingLeft: 0, paddingRight: 0, paddingTop: 0}}>
           <Content>
             <Separator bordered style={{backgroundColor: '#006CB5', paddingTop: 0}}>
               <Grid>
@@ -42,6 +42,8 @@ export default class ListDayExam extends Component {
                 </Left>
                 <Body>
                   <Text>{this.capitalize(this.props.item.name) }</Text>
+                  <Text note>{this.props.item.teacher }</Text>
+                  <Text note>{this.props.item.audience }</Text>
                 </Body>
               </ListItem>
             </List>
@@ -51,9 +53,3 @@ export default class ListDayExam extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  card: {
-    maxHeight: hp(60)
-  }
-});

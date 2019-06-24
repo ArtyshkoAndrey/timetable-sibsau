@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Content } from "native-base";
 import ListDayExam from './DayOfTheExamList.js'
-export default class ExamCarouselTable extends Component {
+export default class ExamViewTable extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -11,7 +11,7 @@ export default class ExamCarouselTable extends Component {
   render () {
     return (
         <Content>
-          <View style={{paddingLeft: 10, paddingRight: 10, paddingTop: 25}}>
+          <View style={{paddingLeft: 10, paddingRight: 10, paddingTop: 10}}>
               {this._renderItem(this.props.exams)}
           </View>
         </Content>

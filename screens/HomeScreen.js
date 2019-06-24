@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, AsyncStorage, ActivityIndicator, StyleSheet, StatusBar, ScrollView, RefreshControl } from 'react-native';
 import CarouselTable from './../components/Carousel';
-import ExamCarouselTable from './../components/ExamCarousel';
+import  ExamViewTable from './../components/ExamView';
 import { Header,
   Container,
   Body,
@@ -17,6 +17,8 @@ export default class HomeScreen extends React.Component {
   };
   constructor (props) {
     super(props);
+    this.refreshEnabled = true
+    this.HomeYList = this.HomeYList.bind(this)
     this.state = {
       userGroup: '',
       numWeek: null,
@@ -25,7 +27,8 @@ export default class HomeScreen extends React.Component {
       scrollWithoutAnimation: true,
       isLoading: true,
       cardItemsArr: [],
-      refreshing: false
+      refreshing: false,
+      tabsLocked: true
     };
   }
   componentDidMount = async () => {
@@ -36,22 +39,6 @@ export default class HomeScreen extends React.Component {
     let data = await AsyncStorage.getItem('timetable')
     if (data !== null) {
       this.calcData(JSON.parse(data))
-      // fetch('http://95.188.80.41/group/' + this.state.userGroup)
-      //   .then((response) => {
-      //     return response.json()
-      //   })
-      //   .then((table) => {
-      //     table = JSON.stringify(table)
-      //     if (table !== data) {
-      //       data = table
-      //       AsyncStorage.setItem('timetable', table)
-      //     }
-      //     this.calcData(JSON.parse(data))
-      //   })
-      //   .catch(error => {
-      //     alert("Нет такой группы")
-      //     this.props.navigation.navigate('Logout')
-      //   })
     } else {
       fetch('http://95.188.80.41/group/' + this.state.userGroup)
         .then((response) => {
@@ -75,6 +62,11 @@ export default class HomeScreen extends React.Component {
   }
   _chengeTab (evt) {
     this.setState({page: Number(evt.i)})
+    if (Number(evt.i) === 2) {
+      this.refreshEnabled = false
+    } else {
+      this.refreshEnabled = true
+    }
   }
   _onRefresh () {
     this.setState({ refreshing: true })
@@ -89,8 +81,7 @@ export default class HomeScreen extends React.Component {
         })
       })
       .catch(error => {
-        alert(
-          "Нет такой группы")
+        alert("Нет такой группы")
       })
   }
   notTapes () {
@@ -101,28 +92,29 @@ export default class HomeScreen extends React.Component {
     )
   }
   calcData (data, refresh = true) {
-    console.log(refresh)
-    let year = new Date().getFullYear()
-    let month = new Date().getMonth()
-    let today = new Date(year, month, 0).getTime()
-    let now = new Date().getTime()
-    let week = Math.round((now - today) / (1000 * 60 * 60 * 24 * 7))
-    // if (week % 2) {
-    //   this.setState({ numWeek: 0 })
-    // } else {
-    //   this.setState({ numWeek: 1 })
-    // }
+    if ( new Date().getWeek() % 2) {
+      this.setState({numWeek: 0})
+    } else {
+      this.setState({ numWeek: 1 })
+    }
     this.setState({
       isLoading: false,
       cardItemsArr: data,
       day: new Date().getDay()
     })
-    this.setState({ numWeek: 1 }) // Заглушка для диплома
+    // this.setState({ numWeek: 1 }) // Заглушка для диплома
     if (refresh) {
       setTimeout(() => this.setState({ page: this.state.numWeek, scrollWithoutAnimation: false }), 0)
     }
   }
-
+  HomeYList (y) {
+    if (Number(y) > 3) {
+      this.setState({refreshEnabled: false})
+    } else {
+      this.setState({refreshEnabled: true})
+    }
+    console.log(y)
+  }
   render() {
     if(this.state.isLoading){
       return (
@@ -139,20 +131,20 @@ export default class HomeScreen extends React.Component {
             <Title style={{paddingLeft: 20}}>{'Расписание ' + this.state.userGroup.toUpperCase() }</Title>
           </Body>
         </Header>
-        <Tabs onChangeTab={this._chengeTab.bind(this)} locked={true} page={this.state.page} initialPage={this.state.page} scrollWithoutAnimation={this.state.scrollWithoutAnimation}>
+        <Tabs onChangeTab={this._chengeTab.bind(this)} locked={this.state.tabsLocked} page={this.state.page} initialPage={this.state.page} scrollWithoutAnimation={this.state.scrollWithoutAnimation}>
           <Tab tabStyle={{ backgroundColor: '#006CB5'}} activeTabStyle={{ backgroundColor: '#006CB5' }} heading="1 неделя">
-            <ScrollView scrollEnabled={false}  horizontal style={{flex: 1}} refreshControl={ <RefreshControl refreshing={this.state.refreshing} onRefresh={this._onRefresh.bind(this)} /> }>
-              { this.state.cardItemsArr.timetable[0].length < 1 ? this.notTapes() : <CarouselTable timetable={this.state.cardItemsArr.timetable[0]} day={this.state.day} week={0} numWeek={this.state.numWeek} /> }
+            <ScrollView scrollEnabled={false}  horizontal refreshControl={ <RefreshControl enabled={this.state.refreshEnabled} refreshing={this.state.refreshing} onRefresh={this._onRefresh.bind(this)} /> }>
+              { this.state.cardItemsArr.timetable[0].length < 1 ? this.notTapes() : <CarouselTable HomeYList={this.HomeYList} timetable={this.state.cardItemsArr.timetable[0]} day={this.state.day} week={0} numWeek={this.state.numWeek} /> }
             </ScrollView>
           </Tab>
           <Tab tabStyle={{ backgroundColor: '#006CB5' }} activeTabStyle={{ backgroundColor: '#006CB5' }} heading="2 неделя">
-            <ScrollView scrollEnabled={false}  horizontal style={{flex: 1}} refreshControl={ <RefreshControl refreshing={this.state.refreshing} onRefresh={this._onRefresh.bind(this)} /> }>
-              { this.state.cardItemsArr.timetable[1].length < 1 ? this.notTapes() : <CarouselTable timetable={this.state.cardItemsArr.timetable[1]} day={this.state.day} week={1} numWeek={this.state.numWeek} /> }
+            <ScrollView scrollEnabled={false}  horizontal refreshControl={ <RefreshControl enabled={this.state.refreshEnabled} refreshing={this.state.refreshing} onRefresh={this._onRefresh.bind(this)} /> }>
+              { this.state.cardItemsArr.timetable[1].length < 1 ? this.notTapes() : <CarouselTable HomeYList={this.HomeYList} timetable={this.state.cardItemsArr.timetable[1]} day={this.state.day} week={1} numWeek={this.state.numWeek} /> }
             </ScrollView>
           </Tab>
           <Tab tabStyle={{ backgroundColor: '#006CB5' }} activeTabStyle={{ backgroundColor: '#006CB5' }} heading="Экзамены">
             <Content style={{flex: 1}} refreshControl={ <RefreshControl refreshing={this.state.refreshing} onRefresh={this._onRefresh.bind(this)} /> }>
-              { this.state.cardItemsArr.exams === null ? this.notTapes() : <ExamCarouselTable exams={this.state.cardItemsArr.exams} /> }
+              { this.state.cardItemsArr.exams === null ? this.notTapes() : < ExamViewTable exams={this.state.cardItemsArr.exams} /> }
             </Content>
           </Tab>
         </Tabs>

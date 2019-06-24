@@ -7,6 +7,7 @@ import { sliderWidth, itemWidth } from './../constants/SliderEntry.style';
 export default class CarouselTable extends Component {
   constructor (props) {
     super(props)
+    this.getYCarousel = this.getYCarousel.bind(this)
     this.state = {
       slider1ActiveSlide: 0,
       day: this.props.day,
@@ -22,9 +23,12 @@ export default class CarouselTable extends Component {
       })
     }
   }
+  getYCarousel (y) {
+    this.props.HomeYList(y)
+  }
   render () {
     return (
-      <View style={{flex: 1}}>
+      <View>
         <Carousel
           ref={ c => this._carousel = c }
           data={this.props.timetable}
@@ -32,7 +36,6 @@ export default class CarouselTable extends Component {
           sliderWidth={sliderWidth}
           itemWidth={itemWidth}
           contentContainerCustomStyle={styles.sliderContentContainer}
-          containerCustomStyle={{flex: 1}}
           inactiveSlideScale={0.7}
           inactiveSlideOpacity={0.7}
           firstItem={this.state.slider1ActiveSlide}
@@ -55,7 +58,7 @@ export default class CarouselTable extends Component {
   }
   _renderItem ({item, index}) {
     return (
-      <ListDay key={index} day={this.state.day} item={item} week={this.state.week} numWeek={this.state.numWeek} />
+      <ListDay key={index} getYCarousel={this.getYCarousel} day={this.state.day} item={item} week={this.state.week} numWeek={this.state.numWeek} />
     );
   }
 }
