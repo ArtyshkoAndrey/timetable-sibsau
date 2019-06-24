@@ -17,7 +17,6 @@ export default class HomeScreen extends React.Component {
   };
   constructor (props) {
     super(props);
-    this.refreshEnabled = true
     this.HomeYList = this.HomeYList.bind(this)
     this.state = {
       userGroup: '',
@@ -28,7 +27,8 @@ export default class HomeScreen extends React.Component {
       isLoading: true,
       cardItemsArr: [],
       refreshing: false,
-      tabsLocked: true
+      tabsLocked: true,
+      refreshEnabled: true
     };
   }
   componentDidMount = async () => {
@@ -63,9 +63,9 @@ export default class HomeScreen extends React.Component {
   _chengeTab (evt) {
     this.setState({page: Number(evt.i)})
     if (Number(evt.i) === 2) {
-      this.refreshEnabled = false
+      this.setState({tabsLocked: false})
     } else {
-      this.refreshEnabled = true
+      this.setState({tabsLocked: true})
     }
   }
   _onRefresh () {
@@ -108,7 +108,7 @@ export default class HomeScreen extends React.Component {
     }
   }
   HomeYList (y) {
-    if (Number(y) > 3) {
+    if (Number(y) > 1) {
       this.setState({refreshEnabled: false})
     } else {
       this.setState({refreshEnabled: true})
