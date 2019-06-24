@@ -19,7 +19,7 @@ export default class HomeScreen extends React.Component {
     super(props);
     this.state = {
       userGroup: '',
-      numWeek: 0,
+      numWeek: null,
       page: 0,
       day: 0,
       scrollWithoutAnimation: true,
@@ -73,6 +73,9 @@ export default class HomeScreen extends React.Component {
         })
     }
   }
+  _chengeTab (evt) {
+    this.setState({page: Number(evt.i)})
+  }
   _onRefresh () {
     this.setState({ refreshing: true })
     fetch('http://95.188.80.41/group/' + this.state.userGroup)
@@ -81,12 +84,13 @@ export default class HomeScreen extends React.Component {
       })
       .then((table) => {
         AsyncStorage.setItem('timetable', JSON.stringify(table), () => {
-          this.calcData(table)
+          this.calcData(table, false)
           this.setState({ refreshing: false })
         })
       })
       .catch(error => {
-        alert("Нет такой группы")
+        alert(
+          "Нет такой группы")
       })
   }
   notTapes () {
@@ -96,23 +100,27 @@ export default class HomeScreen extends React.Component {
       </View>
     )
   }
-  calcData (data) {
+  calcData (data, refresh = true) {
+    console.log(refresh)
     let year = new Date().getFullYear()
     let month = new Date().getMonth()
     let today = new Date(year, month, 0).getTime()
     let now = new Date().getTime()
     let week = Math.round((now - today) / (1000 * 60 * 60 * 24 * 7))
-    if (week % 2) {
-      this.setState({ numWeek: 0 })
-    } else {
-      this.setState({ numWeek: 1 })
-    }
+    // if (week % 2) {
+    //   this.setState({ numWeek: 0 })
+    // } else {
+    //   this.setState({ numWeek: 1 })
+    // }
     this.setState({
       isLoading: false,
       cardItemsArr: data,
       day: new Date().getDay()
     })
-    setTimeout(() => this.setState({ page: this.state.numWeek, scrollWithoutAnimation: false }), 0)
+    this.setState({ numWeek: 1 }) // Заглушка для диплома
+    if (refresh) {
+      setTimeout(() => this.setState({ page: this.state.numWeek, scrollWithoutAnimation: false }), 0)
+    }
   }
 
   render() {
@@ -131,7 +139,7 @@ export default class HomeScreen extends React.Component {
             <Title style={{paddingLeft: 20}}>{'Расписание ' + this.state.userGroup.toUpperCase() }</Title>
           </Body>
         </Header>
-        <Tabs locked={true} page={this.state.page} initialPage={this.state.page} scrollWithoutAnimation={this.state.scrollWithoutAnimation}>
+        <Tabs onChangeTab={this._chengeTab.bind(this)} locked={true} page={this.state.page} initialPage={this.state.page} scrollWithoutAnimation={this.state.scrollWithoutAnimation}>
           <Tab tabStyle={{ backgroundColor: '#006CB5'}} activeTabStyle={{ backgroundColor: '#006CB5' }} heading="1 неделя">
             <ScrollView scrollEnabled={false}  horizontal style={{flex: 1}} refreshControl={ <RefreshControl refreshing={this.state.refreshing} onRefresh={this._onRefresh.bind(this)} /> }>
               { this.state.cardItemsArr.timetable[0].length < 1 ? this.notTapes() : <CarouselTable timetable={this.state.cardItemsArr.timetable[0]} day={this.state.day} week={0} numWeek={this.state.numWeek} /> }
