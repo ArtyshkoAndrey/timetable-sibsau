@@ -1,15 +1,39 @@
 import React from 'react';
-import { View, AsyncStorage, ActivityIndicator, StyleSheet, StatusBar, ScrollView, RefreshControl } from 'react-native';
+import {
+  ImageBackground,
+  View,
+  AsyncStorage,
+  ActivityIndicator,
+  StyleSheet,
+  Dimensions,
+  StatusBar,
+  ScrollView,
+  RefreshControl,
+  TouchableHighlight,
+  Modal
+} from 'react-native';
 import CarouselTable from './../components/Carousel';
 import  ExamViewTable from './../components/ExamView';
-import { Header,
+import {
+  Header,
   Container,
   Body,
   Content,
   Title,
   Tab,
   Tabs,
-  Text } from 'native-base';
+  Text,
+  List,
+  ListIte,
+  Right,
+  Button,
+  Left,
+  Icon,
+  ListItem,
+  Separator
+} from 'native-base'
+const deviceWidth = Dimensions.get("window").width
+const subjectImage = require("./../assets/images/subject.jpg")
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -28,7 +52,9 @@ export default class HomeScreen extends React.Component {
       cardItemsArr: [],
       refreshing: false,
       tabsLocked: true,
-      refreshEnabled: true
+      refreshEnabled: true,
+      modalVisible: false,
+      modalData: {}
     };
   }
   componentDidMount = async () => {
@@ -102,7 +128,6 @@ export default class HomeScreen extends React.Component {
       cardItemsArr: data,
       day: new Date().getDay()
     })
-    // this.setState({ numWeek: 1 }) // Заглушка для диплома
     if (refresh) {
       setTimeout(() => this.setState({ page: this.state.numWeek, scrollWithoutAnimation: false }), 0)
     }
@@ -113,8 +138,11 @@ export default class HomeScreen extends React.Component {
     } else {
       this.setState({refreshEnabled: true})
     }
-    console.log(y)
   }
+  ModelSubject (data = {}) {
+    this.setState({modalVisible: !this.state.modalVisible, modalData: data});
+  }
+
   render() {
     if(this.state.isLoading){
       return (
@@ -124,6 +152,7 @@ export default class HomeScreen extends React.Component {
         </View>
       )
     }
+
     return (
       <Container style={{flex: 1}}>
         <Header hasTabs style={{ backgroundColor: '#006CB5' }}>
@@ -134,12 +163,12 @@ export default class HomeScreen extends React.Component {
         <Tabs onChangeTab={this._chengeTab.bind(this)} locked={this.state.tabsLocked} page={this.state.page} initialPage={this.state.page} scrollWithoutAnimation={this.state.scrollWithoutAnimation}>
           <Tab tabStyle={{ backgroundColor: '#006CB5'}} activeTabStyle={{ backgroundColor: '#006CB5' }} heading="1 неделя">
             <ScrollView scrollEnabled={false}  horizontal refreshControl={ <RefreshControl enabled={this.state.refreshEnabled} refreshing={this.state.refreshing} onRefresh={this._onRefresh.bind(this)} /> }>
-              { this.state.cardItemsArr.timetable[0].length < 1 ? this.notTapes() : <CarouselTable HomeYList={this.HomeYList} timetable={this.state.cardItemsArr.timetable[0]} day={this.state.day} week={0} numWeek={this.state.numWeek} /> }
+              { this.state.cardItemsArr.timetable[0].length < 1 ? this.notTapes() : <CarouselTable ModelSubject={this.ModelSubject.bind(this)} HomeYList={this.HomeYList} timetable={this.state.cardItemsArr.timetable[0]} day={this.state.day} week={0} numWeek={this.state.numWeek} /> }
             </ScrollView>
           </Tab>
           <Tab tabStyle={{ backgroundColor: '#006CB5' }} activeTabStyle={{ backgroundColor: '#006CB5' }} heading="2 неделя">
             <ScrollView scrollEnabled={false}  horizontal refreshControl={ <RefreshControl enabled={this.state.refreshEnabled} refreshing={this.state.refreshing} onRefresh={this._onRefresh.bind(this)} /> }>
-              { this.state.cardItemsArr.timetable[1].length < 1 ? this.notTapes() : <CarouselTable HomeYList={this.HomeYList} timetable={this.state.cardItemsArr.timetable[1]} day={this.state.day} week={1} numWeek={this.state.numWeek} /> }
+              { this.state.cardItemsArr.timetable[1].length < 1 ? this.notTapes() : <CarouselTable ModelSubject={this.ModelSubject.bind(this)} HomeYList={this.HomeYList} timetable={this.state.cardItemsArr.timetable[1]} day={this.state.day} week={1} numWeek={this.state.numWeek} /> }
             </ScrollView>
           </Tab>
           <Tab tabStyle={{ backgroundColor: '#006CB5' }} activeTabStyle={{ backgroundColor: '#006CB5' }} heading="Экзамены">
@@ -148,6 +177,82 @@ export default class HomeScreen extends React.Component {
             </Content>
           </Tab>
         </Tabs>
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            this.ModelSubject()
+          }}>
+          <Container style={{flex: 1}}>
+            <ImageBackground
+              style={{
+                height: null,
+                resizeMode: "cover",
+                width: deviceWidth,
+                paddingTop: 0,
+              }}
+              source={subjectImage}
+            >
+             <Header noShadow iosBarStyle={"light-content"} androidStatusBarColor='#000' style={{ backgroundColor: 'transparent' }}>
+              <Left>
+                <Button transparent onPress={() => { this.ModelSubject() }}>
+                  <Icon name="arrow-back" />
+                </Button>
+              </Left>
+               <Right>
+                 <Text style={{color: '#FFF'}}>Информация</Text>
+               </Right>
+             </Header>
+             <View style={{justifyContent: 'center', height: 200}}>
+              <Text style={{textAlign: 'center', color: '#FFF'}}>{ this.state.modalData['name'] !== undefined ? this.state.modalData['name'] : '' }</Text>
+             </View>
+           </ImageBackground>
+           <Content padder>
+             <View style={styles.pVertical}>
+               <Separator style={{ backgroundColor: '#FFF', height: 20 }}>
+                 <Text style={{fontSize: 11}}>Преподаватель</Text>
+               </Separator>
+               <ListItem style={{paddingTop: 0, borderBottomWidth: 0, paddingBottom: 0}}>
+                 <Text>{ this.state.modalData['teacher'] !== undefined ? this.state.modalData['teacher'] : 'Нет данных' }</Text>
+               </ListItem>
+             </View>
+             <View style={styles.pVertical}>
+               <Separator style={{ backgroundColor: '#FFF', height: 20 }}>
+                 <Text style={{fontSize: 11}}>Вид</Text>
+               </Separator>
+               <ListItem style={{paddingTop: 0, borderBottomWidth: 0, paddingBottom: 0}}>
+                 <Text>{ this.state.modalData['type'] !== undefined ? this.state.modalData['type'] : 'Нет данных' }</Text>
+               </ListItem>
+             </View>
+             <View style={styles.pVertical}>
+               <Separator style={{ backgroundColor: '#FFF', height: 20 }}>
+                 <Text style={{fontSize: 11}}>Аудитория</Text>
+               </Separator>
+               <ListItem style={{paddingTop: 0, borderBottomWidth: 0, paddingBottom: 0}}>
+                 <Text>{ this.state.modalData['audience'] !== undefined ? this.state.modalData['audience'] : 'Нет данных' }</Text>
+               </ListItem>
+             </View>
+             <View style={styles.pVertical}>
+               <Separator style={{ backgroundColor: '#FFF', height: 20 }}>
+                 <Text style={{fontSize: 11}}>Время</Text>
+               </Separator>
+               <ListItem style={{paddingTop: 0, borderBottomWidth: 0, paddingBottom: 0}}>
+                 <Text>{ this.state.modalData['time'] !== undefined ? ( this.state.modalData['time'].length === 2 ? this.state.modalData['time'][0] + ' - ' : '/ - ' ) : '/ - ' }
+                 { this.state.modalData['time'] !== undefined ? ( this.state.modalData['time'].length === 2 ? this.state.modalData['time'][1] : '/' ) : '/' } </Text>
+               </ListItem>
+             </View>
+             <View style={styles.pVertical}>
+               <Separator style={{ backgroundColor: '#FFF', height: 20 }}>
+                 <Text style={{fontSize: 11}}>Следующих день этой ленты</Text>
+               </Separator>
+               <ListItem style={{paddingTop: 0, borderBottomWidth: 0, paddingBottom: 0}}>
+                 <Text>Нет данных</Text>
+               </ListItem>
+             </View>
+           </Content>
+          </Container>
+        </Modal>
       </Container>
     );
   }
@@ -159,5 +264,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+  },
+  pVertical: {
+    paddingTop: 10,
+    paddingBottom: 10
   }
 });

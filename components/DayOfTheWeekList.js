@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
-import { StyleSheet, Dimensions, View } from 'react-native'
-import { Content, ListItem, Text, Separator, Card, CardItem, Left, Body, List, Right } from 'native-base'
-import { hp } from './../constants/SliderEntry.style'
+import { Content, ListItem, Text, Separator, Card, CardItem, Left, Body, List } from 'native-base'
 import { Col, Grid } from 'react-native-easy-grid'
-const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
+import { TouchableHighlight, View } from 'react-native';
 
 export default class ListDay extends Component {
   constructor (props) {
     super(props)
+    console.log(this.props.navigate)
   }
   _subjects () {
     let payments = [];
@@ -19,9 +18,13 @@ export default class ListDay extends Component {
               <Text note>{this.props.item.lessons[i]['time'][0]}</Text>
             </Left>
             <Body>
-              {typeof this.props.item.lessons[i]['subGroup'] !== 'undefined' ? <Text note>{this.props.item.lessons[i]['subGroup']}</Text> : null }
-              <Text>{this.capitalize(this.props.item.lessons[i].name) }</Text>
-              <Text note>{this.props.item.lessons[i]['audience']}</Text>
+              <TouchableHighlight onPress={() => { this.props.ModelSubject(this.props.item.lessons[i])}} underlayColor="white">
+                <View>
+                  {typeof this.props.item.lessons[i]['subGroup'] !== 'undefined' ? <Text note>{this.props.item.lessons[i]['subGroup']}</Text> : null }
+                  <Text>{this.capitalize(this.props.item.lessons[i].name) }</Text>
+                  <Text note>{this.props.item.lessons[i]['audience']}</Text>
+                </View>
+              </TouchableHighlight>
             </Body>
           </ListItem>
         )
@@ -31,13 +34,20 @@ export default class ListDay extends Component {
               <Text note>{this.props.item.lessons[i]['time'][0]}</Text>
             </Left>
             <Body>
-              <Text note>{this.props.item.lessons[i]['0']['subGroup']}</Text>
-              <Text>{this.capitalize(this.props.item.lessons[i]['0'].name) }</Text>
-              <Text note>{this.props.item.lessons[i]['0']['audience']}</Text>
-
-              <Text style={{marginTop: 10}} note>{this.props.item.lessons[i]['1']['subGroup']}</Text>
-              <Text>{this.capitalize(this.props.item.lessons[i]['1'].name) }</Text>
-              <Text note>{this.props.item.lessons[i]['1']['audience']}</Text>
+              <TouchableHighlight onPress={() => { this.props.ModelSubject(this.props.item.lessons[i]['0'])}} underlayColor="white">
+                <View>
+                  <Text note>{this.props.item.lessons[i]['0']['subGroup']}</Text>
+                  <Text>{this.capitalize(this.props.item.lessons[i]['0'].name) }</Text>
+                  <Text note>{this.props.item.lessons[i]['0']['audience']}</Text>
+                </View>
+              </TouchableHighlight>
+              <TouchableHighlight onPress={() => { this.props.ModelSubject(this.props.item.lessons[i]['1'])}} underlayColor="white">
+                <View style={{marginTop: 10}}>
+                  <Text note>{this.props.item.lessons[i]['1']['subGroup']}</Text>
+                  <Text>{this.capitalize(this.props.item.lessons[i]['1'].name) }</Text>
+                  <Text note>{this.props.item.lessons[i]['1']['audience']}</Text>
+                </View>
+              </TouchableHighlight>
             </Body>
           </ListItem>
         )

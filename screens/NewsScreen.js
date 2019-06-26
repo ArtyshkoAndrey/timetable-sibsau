@@ -32,20 +32,17 @@ export default class NewsScreen extends React.Component {
     }
   }
   _onRefresh () {
-    console.log("hi")
     this.state.isRefreshing = true
     fetch('http://95.188.80.41/group/БПА17-01')
       .then((response) => {
         try {
           return response.json()
         } catch(e) {
-          console.log('123123')
           alert("Нет такой группы")
           // this.props.navigation.navigate('LogoutStack')
         }
       })
-      .then((table) => {
-        console.log(table)
+      .then(() => {
         this.state.isRefreshing = false
       })
   }

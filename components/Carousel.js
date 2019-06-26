@@ -58,7 +58,7 @@ export default class CarouselTable extends Component {
   }
   _renderItem ({item, index}) {
     return (
-      <ListDay key={index} getYCarousel={this.getYCarousel} day={this.state.day} item={item} week={this.state.week} numWeek={this.state.numWeek} />
+      <ListDay key={index} ModelSubject={this.props.ModelSubject.bind(this)} getYCarousel={this.getYCarousel} day={this.state.day} item={item} week={this.state.week} numWeek={this.state.numWeek} />
     );
   }
 }
