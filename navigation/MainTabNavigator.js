@@ -43,7 +43,7 @@ const HomeTabs = createBottomTabNavigator({
         <TabBarIcon
           focused={focused}
           name={'exit-to-app'}
-          color={'#FF0000'}
+          color={'#ff4545'}
         />
       )
     }

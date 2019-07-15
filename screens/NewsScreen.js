@@ -48,15 +48,27 @@ export default class NewsScreen extends React.Component {
   }
   _renderItem () {
     let pay = []
-    for (let i = 0; i < 1; i++) {
+    let data = [
+      {
+        content: 'Расписание вновь доступно. В этом обновлении добавлены новые группы, и увеличина скорость работы приложения',
+        date: '15 июля 2019',
+        user: 'СибГУ'
+      },
+      {
+        content: 'Добро пожаловать в новое приложение "Расписание СибГУ". Здесь Вы найдёте своё актуальное расписание занятий и экзаменов',
+        date: '17 июня 2019',
+        user: 'СибГУ'
+      }
+    ]
+    for (let i = 0; i < data.length; i++) {
       pay.push(
         <Card key={i}>
           <CardItem bordered>
             <Left>
               <Thumbnail source={logo} />
               <Body>
-                <Text>СибГУ</Text>
-                <Text note>17 июня 2019</Text>
+                <Text>{data[i].user}</Text>
+                <Text note>{data[i].date}</Text>
               </Body>
             </Left>
           </CardItem>
@@ -74,7 +86,7 @@ export default class NewsScreen extends React.Component {
                 source={cardImage}
               />
               <Text>
-                Добро пожаловать в новое приложение "Расписание СибГУ". Здесь Вы найдёте своё актуальное расписание занятий и экзаменов
+                {data[i].content}
               </Text>
             </Body>
           </CardItem>

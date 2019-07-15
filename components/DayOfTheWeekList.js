@@ -11,17 +11,17 @@ export default class ListDay extends Component {
   _subjects () {
     let payments = [];
     for (let i = 0; i < this.props.item.lessons.length; i++) {
-      if (typeof this.props.item.lessons[i]['0'] === 'undefined') {
+      if (typeof this.props.item.lessons[i][0] === 'undefined') {
         payments.push(
           <ListItem avatar key={i}>
             <Left style={{padding: 0}}>
-              <Text note>{this.props.item.lessons[i]['time'][0]}</Text>
+              <Text note>{this.props.item.lessons[i]['time']['start']}</Text>
             </Left>
             <Body>
-              <TouchableHighlight onPress={() => { this.props.ModelSubject(this.props.item.lessons[i])}} underlayColor="white">
+              <TouchableHighlight onPress={() => { this.props.ModelSubject(this.props.item.lessons[i], this.props.item)}} underlayColor="white">
                 <View>
                   {typeof this.props.item.lessons[i]['subGroup'] !== 'undefined' ? <Text note>{this.props.item.lessons[i]['subGroup']}</Text> : null }
-                  <Text>{this.capitalize(this.props.item.lessons[i].name) }</Text>
+                  <Text>{this.capitalize(this.props.item.lessons[i]['name']) }</Text>
                   <Text note>{this.props.item.lessons[i]['audience']}</Text>
                 </View>
               </TouchableHighlight>
@@ -31,21 +31,21 @@ export default class ListDay extends Component {
       } else {
         payments.push(<ListItem avatar key={i}>
             <Left style={{padding: 0}}>
-              <Text note>{this.props.item.lessons[i]['time'][0]}</Text>
+              <Text note>{this.props.item.lessons[i][0]['time']['start']}</Text>
             </Left>
             <Body>
-              <TouchableHighlight onPress={() => { this.props.ModelSubject(this.props.item.lessons[i]['0'])}} underlayColor="white">
+              <TouchableHighlight onPress={() => { this.props.ModelSubject(this.props.item.lessons[i][0])}} underlayColor="white">
                 <View>
-                  <Text note>{this.props.item.lessons[i]['0']['subGroup']}</Text>
-                  <Text>{this.capitalize(this.props.item.lessons[i]['0'].name) }</Text>
-                  <Text note>{this.props.item.lessons[i]['0']['audience']}</Text>
+                  <Text note>{this.props.item.lessons[i][0]['subGroup']}</Text>
+                  <Text>{this.capitalize(this.props.item.lessons[i][0]['name']) }</Text>
+                  <Text note>{this.props.item.lessons[i][0]['audience']}</Text>
                 </View>
               </TouchableHighlight>
-              <TouchableHighlight onPress={() => { this.props.ModelSubject(this.props.item.lessons[i]['1'])}} underlayColor="white">
+              <TouchableHighlight onPress={() => { this.props.ModelSubject(this.props.item.lessons[i][1])}} underlayColor="white">
                 <View style={{marginTop: 10}}>
-                  <Text note>{this.props.item.lessons[i]['1']['subGroup']}</Text>
-                  <Text>{this.capitalize(this.props.item.lessons[i]['1'].name) }</Text>
-                  <Text note>{this.props.item.lessons[i]['1']['audience']}</Text>
+                  <Text note>{this.props.item.lessons[i][1]['subGroup']}</Text>
+                  <Text>{this.capitalize(this.props.item.lessons[i][1]['name']) }</Text>
+                  <Text note>{this.props.item.lessons[i][1]['audience']}</Text>
                 </View>
               </TouchableHighlight>
             </Body>
@@ -78,7 +78,7 @@ export default class ListDay extends Component {
           <Content onScroll={this.handleScroll.bind(this)}>
             <Separator bordered style={{backgroundColor: '#006CB5', paddingTop: 0}}>
               <Grid>
-                <Col size={40}><Text style={{fontWeight: 'bold', marginLeft: 5 ,marginTop: 5, fontSize: 14, color: '#fff'}}>{ this.props.item.nameDay }</Text></Col>
+                <Col size={40}><Text style={{fontWeight: 'bold', marginLeft: 5 ,marginTop: 5, fontSize: 14, color: '#fff'}}>{ this.props.item['name'] }</Text></Col>
                 <Col style={{width: 110}}>
                   {this._checkDay()}
                 </Col>

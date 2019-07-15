@@ -43,7 +43,7 @@ export default class HomeScreen extends React.Component {
     super(props);
     this.HomeYList = this.HomeYList.bind(this)
     this.state = {
-      userGroup: '',
+      userGroup: {},
       numWeek: null,
       page: 0,
       day: 0,
@@ -60,13 +60,15 @@ export default class HomeScreen extends React.Component {
   componentDidMount = async () => {
     await AsyncStorage.getItem('userGroup')
     .then((value) => {
+      value = JSON.parse(value)
       this.setState({ userGroup: value })
     })
     let data = await AsyncStorage.getItem('timetable')
     if (data !== null) {
       this.calcData(JSON.parse(data))
     } else {
-      fetch('http://95.188.80.41/group/' + this.state.userGroup)
+      console.log('fetch', this.state.userGroup.id)
+      fetch('http://95.188.80.41/api/group/' + this.state.userGroup.id)
         .then((response) => {
           try {
             return response.json()
@@ -81,7 +83,8 @@ export default class HomeScreen extends React.Component {
           })
         })
         .catch(() => {
-          alert("Нет такой группы")
+          alert("Сервер временно не отвечает")
+          this.setState({ refreshing: false })
           this.props.navigation.navigate('Logout')
         })
     }
@@ -96,7 +99,7 @@ export default class HomeScreen extends React.Component {
   }
   _onRefresh () {
     this.setState({ refreshing: true })
-    fetch('http://95.188.80.41/group/' + this.state.userGroup)
+    fetch('http://95.188.80.41/api/group/' + this.state.userGroup.id)
       .then((response) => {
         return response.json()
       })
@@ -107,7 +110,8 @@ export default class HomeScreen extends React.Component {
         })
       })
       .catch(error => {
-        alert("Нет такой группы")
+        alert("Сервер времнно не отвечает")
+        this.setState({ refreshing: false })
       })
   }
   notTapes () {
@@ -139,8 +143,16 @@ export default class HomeScreen extends React.Component {
       this.setState({refreshEnabled: true})
     }
   }
-  ModelSubject (data = {}) {
-    this.setState({modalVisible: !this.state.modalVisible, modalData: data});
+  ModelSubject (dataLesson = {}, dataDay = {}) {
+    this.setState({modalVisible: !this.state.modalVisible, modalData: dataLesson});
+    if (Object.keys(dataLesson).length !== 0) {
+      this.state.cardItemsArr.timetable[this.state.numWeek].find((day) => {
+        let otvet = day.lessons.find(lesson => {
+          return (lesson[0] === undefined && lesson['name'] === dataLesson['name'] && ((day['index'] >= dataDay['index']) || (day['index'] === dataDay['index'] && lesson['time']['start'] !== dataLesson['time']['start'] )))
+        })
+        console.log('otver',otvet)
+      })
+    }
   }
 
   render() {
@@ -157,7 +169,7 @@ export default class HomeScreen extends React.Component {
       <Container style={{flex: 1}}>
         <Header hasTabs style={{ backgroundColor: '#006CB5' }}>
           <Body>
-            <Title style={{paddingLeft: 20}}>{'Расписание ' + this.state.userGroup.toUpperCase() }</Title>
+            <Title style={{paddingLeft: 20}}>{'Расписание ' + this.state.userGroup.name.toUpperCase() }</Title>
           </Body>
         </Header>
         <Tabs onChangeTab={this._chengeTab.bind(this)} locked={this.state.tabsLocked} page={this.state.page} initialPage={this.state.page} scrollWithoutAnimation={this.state.scrollWithoutAnimation}>
@@ -194,63 +206,63 @@ export default class HomeScreen extends React.Component {
               }}
               source={subjectImage}
             >
-             <Header noShadow iosBarStyle={"light-content"} androidStatusBarColor='#000' style={{ backgroundColor: 'transparent' }}>
-              <Left>
-                <Button transparent onPress={() => { this.ModelSubject() }}>
-                  <Icon name="arrow-back" />
-                </Button>
-              </Left>
-               <Right>
-                 <Text style={{color: '#FFF'}}>Информация</Text>
-               </Right>
-             </Header>
-             <View style={{justifyContent: 'center', height: 200}}>
-              <Text style={{textAlign: 'center', color: '#FFF'}}>{ this.state.modalData['name'] !== undefined ? this.state.modalData['name'] : '' }</Text>
-             </View>
-           </ImageBackground>
-           <Content padder>
-             <View style={styles.pVertical}>
-               <Separator style={{ backgroundColor: '#FFF', height: 20 }}>
-                 <Text style={{fontSize: 11}}>Преподаватель</Text>
-               </Separator>
-               <ListItem style={{paddingTop: 0, borderBottomWidth: 0, paddingBottom: 0}}>
-                 <Text>{ this.state.modalData['teacher'] !== undefined ? this.state.modalData['teacher'] : 'Нет данных' }</Text>
-               </ListItem>
-             </View>
-             <View style={styles.pVertical}>
-               <Separator style={{ backgroundColor: '#FFF', height: 20 }}>
-                 <Text style={{fontSize: 11}}>Вид</Text>
-               </Separator>
-               <ListItem style={{paddingTop: 0, borderBottomWidth: 0, paddingBottom: 0}}>
-                 <Text>{ this.state.modalData['type'] !== undefined ? this.state.modalData['type'] : 'Нет данных' }</Text>
-               </ListItem>
-             </View>
-             <View style={styles.pVertical}>
-               <Separator style={{ backgroundColor: '#FFF', height: 20 }}>
-                 <Text style={{fontSize: 11}}>Аудитория</Text>
-               </Separator>
-               <ListItem style={{paddingTop: 0, borderBottomWidth: 0, paddingBottom: 0}}>
-                 <Text>{ this.state.modalData['audience'] !== undefined ? this.state.modalData['audience'] : 'Нет данных' }</Text>
-               </ListItem>
-             </View>
-             <View style={styles.pVertical}>
-               <Separator style={{ backgroundColor: '#FFF', height: 20 }}>
-                 <Text style={{fontSize: 11}}>Время</Text>
-               </Separator>
-               <ListItem style={{paddingTop: 0, borderBottomWidth: 0, paddingBottom: 0}}>
-                 <Text>{ this.state.modalData['time'] !== undefined ? ( this.state.modalData['time'].length === 2 ? this.state.modalData['time'][0] + ' - ' : '/ - ' ) : '/ - ' }
-                 { this.state.modalData['time'] !== undefined ? ( this.state.modalData['time'].length === 2 ? this.state.modalData['time'][1] : '/' ) : '/' } </Text>
-               </ListItem>
-             </View>
-             <View style={styles.pVertical}>
-               <Separator style={{ backgroundColor: '#FFF', height: 20 }}>
-                 <Text style={{fontSize: 11}}>Следующих день этой ленты</Text>
-               </Separator>
-               <ListItem style={{paddingTop: 0, borderBottomWidth: 0, paddingBottom: 0}}>
-                 <Text>Нет данных</Text>
-               </ListItem>
-             </View>
-           </Content>
+              <Header noShadow iosBarStyle={"light-content"} androidStatusBarColor='#000' style={{ backgroundColor: 'transparent' }}>
+                <Left>
+                  <Button transparent onPress={() => { this.ModelSubject() }}>
+                    <Icon name="arrow-back" />
+                  </Button>
+                </Left>
+                <Right>
+                  <Text style={{color: '#FFF'}}>Информация</Text>
+                </Right>
+              </Header>
+              <View style={{justifyContent: 'center', height: 200}}>
+                <Text style={{textAlign: 'center', color: '#FFF'}}>{ this.state.modalData['name'] !== undefined ? this.state.modalData['name'] : '' }</Text>
+              </View>
+            </ImageBackground>
+            <Content padder>
+              <View style={styles.pVertical}>
+                <Separator style={{ backgroundColor: '#FFF', height: 20 }}>
+                  <Text style={{fontSize: 11}}>Преподаватель</Text>
+                </Separator>
+                <ListItem style={{paddingTop: 0, borderBottomWidth: 0, paddingBottom: 0}}>
+                  <Text>{ this.state.modalData['teacher'] !== undefined ? this.state.modalData['teacher'] : 'Нет данных' }</Text>
+                </ListItem>
+              </View>
+              <View style={styles.pVertical}>
+                <Separator style={{ backgroundColor: '#FFF', height: 20 }}>
+                  <Text style={{fontSize: 11}}>Вид</Text>
+                </Separator>
+                <ListItem style={{paddingTop: 0, borderBottomWidth: 0, paddingBottom: 0}}>
+                  <Text>{ this.state.modalData['type'] !== undefined ? this.state.modalData['type'] : 'Нет данных' }</Text>
+                </ListItem>
+              </View>
+              <View style={styles.pVertical}>
+                <Separator style={{ backgroundColor: '#FFF', height: 20 }}>
+                  <Text style={{fontSize: 11}}>Аудитория</Text>
+                </Separator>
+                <ListItem style={{paddingTop: 0, borderBottomWidth: 0, paddingBottom: 0}}>
+                  <Text>{ this.state.modalData['audience'] !== undefined ? this.state.modalData['audience'] : 'Нет данных' }</Text>
+                </ListItem>
+              </View>
+              <View style={styles.pVertical}>
+                <Separator style={{ backgroundColor: '#FFF', height: 20 }}>
+                  <Text style={{fontSize: 11}}>Время</Text>
+                </Separator>
+                <ListItem style={{paddingTop: 0, borderBottomWidth: 0, paddingBottom: 0}}>
+                  <Text>{ this.state.modalData['time'] !== undefined ? ( this.state.modalData['time']['start'] !== undefined ? this.state.modalData['time']['start'] + ' - ' : '/ - ' ) : '/ - ' }
+                  { this.state.modalData['time'] !== undefined ? ( this.state.modalData['time']['end'] !== undefined ? this.state.modalData['time']['end'] : '/' ) : '/' } </Text>
+                </ListItem>
+              </View>
+              <View style={styles.pVertical}>
+                <Separator style={{ backgroundColor: '#FFF', height: 20 }}>
+                  <Text style={{fontSize: 11}}>Следующих день этой ленты</Text>
+                </Separator>
+                <ListItem style={{paddingTop: 0, borderBottomWidth: 0, paddingBottom: 0}}>
+                  <Text>Нет данных</Text>
+                </ListItem>
+              </View>
+            </Content>
           </Container>
         </Modal>
       </Container>
