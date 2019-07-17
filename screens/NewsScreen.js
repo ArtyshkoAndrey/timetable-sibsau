@@ -17,9 +17,15 @@ import {
   Right,
   Body,
 } from "native-base";
+import {
+    CachedImage,
+    ImageCacheProvider,
+    ImageCacheManager
+} from 'react-native-cached-image';
+const defaultImageCacheManager = ImageCacheManager();
 const deviceWidth = Dimensions.get("window").width;
 const logo = require("./../assets/images/logo.png")
-const cardImage = require("./../assets/images/splash-port-hdpi.png")
+// const cardImage = require("./../assets/images/splash-port-hdpi.png")
 
 export default class NewsScreen extends React.Component {
   static navigationOptions = {
@@ -28,72 +34,79 @@ export default class NewsScreen extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      isRefreshing: false
+      isRefreshing: false,
+      posts: []
     }
   }
+  componentDidMount = async () => {
+    await this._onRefresh()
+  }
+
   _onRefresh () {
     this.state.isRefreshing = true
-    fetch('http://95.188.80.41/group/БПА17-01')
+    fetch('http://95.188.80.41/api/posts')
       .then((response) => {
         try {
           return response.json()
         } catch(e) {
-          alert("Нет такой группы")
+          alert("Нет связи с сервером")
           // this.props.navigation.navigate('LogoutStack')
         }
       })
-      .then(() => {
+      .then((posts) => {
+        defaultImageCacheManager.clearCache()
+        .then(() => {
+            ReactNative.Alert.alert('Cache cleared');
+        });
         this.state.isRefreshing = false
+        this.setState({posts: posts})
       })
   }
   _renderItem () {
-    let pay = []
-    let data = [
-      {
-        content: 'Расписание вновь доступно. В этом обновлении добавлены новые группы, и увеличина скорость работы приложения',
-        date: '15 июля 2019',
-        user: 'СибГУ'
-      },
-      {
-        content: 'Добро пожаловать в новое приложение "Расписание СибГУ". Здесь Вы найдёте своё актуальное расписание занятий и экзаменов',
-        date: '17 июня 2019',
-        user: 'СибГУ'
-      }
-    ]
-    for (let i = 0; i < data.length; i++) {
-      pay.push(
-        <Card key={i}>
+    let data = []
+    // let data = [
+    //   {
+    //     content: 'Расписание вновь доступно. В этом обновлении добавлены новые группы, и увеличина скорость работы приложения',
+    //     date: '15 июля 2019',
+    //     user: 'СибГУ'
+    //   },
+    //   {
+    //     content: 'Добро пожаловать в новое приложение "Расписание СибГУ". Здесь Вы найдёте своё актуальное расписание занятий и экзаменов',
+    //     date: '17 июня 2019',
+    //     user: 'СибГУ'
+    //   }
+    // ]
+    this.state.posts.forEach(post => {
+      data.push(
+        <Card key={post.id}>
           <CardItem bordered>
             <Left>
-              <Thumbnail source={logo} />
+            <CachedImage source={{uri: post.user.avatar}} />
               <Body>
-                <Text>{data[i].user}</Text>
-                <Text note>{data[i].date}</Text>
+                <Text>{post.user.name}</Text>
+                <Text note>{post.created_at}</Text>
               </Body>
             </Left>
           </CardItem>
 
           <CardItem>
             <Body>
-              <Image
-                style={{
-                  alignSelf: "center",
-                  height: 150,
-                  resizeMode: "cover",
-                  width: deviceWidth / 1.18,
-                  marginVertical: 5
-                }}
-                source={cardImage}
-              />
+              <CachedImage source={{uri: 'http://95.188.80.41/public/uploads' + post.avatar}} style={{
+                alignSelf: "center",
+                height: 200,
+                resizeMode: "cover",
+                width: deviceWidth / 1.18,
+                marginVertical: 5
+              }} />
               <Text>
-                {data[i].content}
+                {post.summary}
               </Text>
             </Body>
           </CardItem>
         </Card>
       )
-    }
-    return pay
+    })
+    return data
   }
 
   render() {

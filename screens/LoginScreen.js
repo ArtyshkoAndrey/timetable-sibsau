@@ -1,8 +1,6 @@
 import React from "react";
-import { StyleSheet, Image, AsyncStorage, KeyboardAvoidingView, TouchableOpacity, View, ScrollView } from "react-native";
-import { Container, Content, Form, Item, Input, List, ListItem, Text, Button, Label } from 'native-base';
-import 'abortcontroller-polyfill';
-import { Permissions } from 'expo';
+import { StyleSheet, Image, AsyncStorage, KeyboardAvoidingView, TouchableOpacity, View, ScrollView, Text } from "react-native";
+import { Container, Content, Form, Item, Input, List, ListItem, Button, Label } from 'native-base';
 import logo from "./../assets/images/logo.png"
 export default class LoginScreen extends React.Component {
   static navigationOptions = {
@@ -17,12 +15,10 @@ export default class LoginScreen extends React.Component {
       groups: [],
       userGroup: {}
     }
-    this.controller = new AbortController()
   }
   async findGroups (query) {
-    // this.controller.abort()
     this.setState({query: query})
-    await fetch('http://95.188.80.41/api/group/search/' + query + '/3', {signal: this.controller.signal})
+    await fetch('http://95.188.80.41/api/group/search/' + query + '/3')
       .then((response) => {
         return response.json()
       })
@@ -71,8 +67,9 @@ export default class LoginScreen extends React.Component {
         <Content padder disableKBDismissScroll={true}>
           <KeyboardAvoidingView behavior="padding">
             <View style={styles.container}>
-              <Image source={logo} style={{height: 100, marginTop: 50, marginBottom: 100, width: null, resizeMode: 'contain'}} />
-              <Form style={{flex: 1, paddingBottom: 0, marginBottom: 0}}>
+              <Image source={logo} style={{height: 100, marginTop: 100, marginBottom: 30, width: null, resizeMode: 'contain'}} />
+              <Text style={{fontSize: 18, textAlign: 'center', color: '#006CB5', fontFamily: "Helvetica",}}>СибГУ им. Решетнева</Text>
+              <Form style={{flex: 1, paddingBottom: 0, marginBottom: 0, marginTop: 20}}>
                 <Item stackedLabel last>
                   <Label>Группа</Label>
                   <Input onChangeText={val => this.findGroups(val)} />
